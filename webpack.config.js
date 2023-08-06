@@ -4,22 +4,23 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const isProduction = process.env.NODE_ENV === "production";
-
 const stylesHandler = MiniCssExtractPlugin.loader;
 
-const config = {
-  entry: "./src/index.js",
+module.exports = {
+  mode: "development",
+  entry: ["./src/index.js", "./src/dom.js"],
   output: {
+    filename: "main.js",
     path: path.resolve(__dirname, "dist"),
   },
+  devtool: "inline-source-map",
   devServer: {
     open: true,
     host: "localhost",
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "index.html",
+      title: "Todo App",
     }),
 
     new MiniCssExtractPlugin(),
@@ -35,20 +36,11 @@ const config = {
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-        type: "asset",
+        type: "asset/resource",
       },
 
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],
   },
-};
-
-module.exports = () => {
-  if (isProduction) {
-    config.mode = "production";
-  } else {
-    config.mode = "development";
-  }
-  return config;
 };

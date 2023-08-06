@@ -1,40 +1,98 @@
+@font-face {
+  font-family: "changa";
+  src: url(./Changa-VariableFont_wght.ttf);
+}
 /* basics */
 html,
-body {
+body,
+.app {
   width: 100%;
-  height: 100%;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-family: helvetica;
   margin: 0;
 }
 
 /* layouts */
-body {
+.app {
+  display: grid;
+  grid-template-rows: 10vh 85vh 5vh;
+  position: fixed;
+}
+
+.footer {
+  background-color: gold;
+  display: flex;
+  place-content: center;
+  align-items: center;
+  font-size: 3vh;
+}
+.header {
+  display: flex;
+  grid-column: 1 / span2;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.main {
   display: grid;
   grid-template-columns: 1fr 5fr;
-  grid-template-rows: 1fr 8fr;
 }
 
-.selected-project,
 .dashboard {
+  display: grid;
+  grid-template-rows: 4fr 6fr 1fr;
+  height: 100%;
+}
+
+.boxes {
   display: flex;
   flex-direction: column;
-  flex-wrap: nowrap;
+  gap: 10px;
 }
 
-.header {
-  grid-column: 1/3;
+.display {
 }
 
 /* blocks */
 .header {
+  font-family: "changa";
   width: 100%;
-  background-image: linear-gradient(
-    245deg,
-    rgb(182, 255, 209),
-    rgb(250, 255, 255)
-  );
-  padding: 16px 8px;
-  font-size: larger;
+  background-color: gold;
+  font-size: 5vh;
+}
+
+.today-date,
+.logo {
+  padding: 10px;
+}
+
+.dashboard {
+  background-color: rgb(255, 253, 109);
+}
+
+.boxes {
+  font-size: large;
+  padding: 16px;
+}
+
+.display {
+  background-color: rgb(228, 228, 196);
+}
+
+.add-btn {
+  color: black;
+  font-size: 5vh;
+  font-weight: 900;
+  background-color: rgb(255, 253, 109);
+  border-color: gold;
+  border-style: none;
+  border-top-style: solid;
+  border-top-width: 5px;
+}
+
+.projects {
+  border-top-style: solid;
+  border-top-color: gold;
+  border-top-width: 5px;
 }
 
 /* modifications */

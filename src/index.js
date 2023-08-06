@@ -5,7 +5,7 @@ function ToDo(title, description, priority, dueDate, completed) {
     priority,
     dueDate,
     completed,
-    do_UnDo: () => {
+    completion: () => {
       if (this.completed === true) this.completed = false;
       else this.completed = true;
     },
@@ -13,16 +13,17 @@ function ToDo(title, description, priority, dueDate, completed) {
 }
 
 function Project(name) {
-  return {
-    name,
-    listOfToDos: [],
-    addToDoToList: (toDoItem) => {
-      this.listOfToDos.push(toDoItem);
-    },
-    removeToDo: (toDoItem) => {
-      this.listOfToDos.splice(this.listOfToDos.indexOf(toDoItem), 1);
-    },
+  this.name = name;
+  this.listOfToDos = [];
+  this.removeToDo = (toDoItem) => {
+    this.listOfToDos.splice(this.listOfToDos.indexOf(toDoItem), 1);
+  };
+  this.addToDoToList = (toDoItem) => {
+    this.listOfToDos.push(toDoItem);
   };
 }
 
-const inbox = Project("today");
+const inbox = new Project("project one");
+inbox.addToDoToList(
+  ToDo("todo_one", "just an example", "low", new Date(), false)
+);
