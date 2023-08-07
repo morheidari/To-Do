@@ -7,15 +7,19 @@ html,
 body,
 .app {
   width: 100%;
-  font-family: helvetica;
+  font-family: sans-serif;
   margin: 0;
+}
+
+img {
+  height: 35px;
+  width: 35px;
 }
 
 /* layouts */
 .app {
   display: grid;
-  grid-template-rows: 10vh 85vh 5vh;
-  position: fixed;
+  grid-template-rows: 15vh 80vh 5vh;
 }
 
 .footer {
@@ -34,12 +38,12 @@ body,
 
 .main {
   display: grid;
-  grid-template-columns: 1fr 5fr;
+  grid-template-columns: 1fr 4fr;
 }
 
 .dashboard {
   display: grid;
-  grid-template-rows: 4fr 6fr 1fr;
+  grid-template-rows: 32vh 40vh 8vh;
   height: 100%;
 }
 
@@ -49,6 +53,24 @@ body,
   gap: 10px;
 }
 
+.project-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.boxes > div,
+.project-box-title,
+.project {
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+}
+
+.projects {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vh;
+}
 .display {
 }
 
@@ -62,15 +84,27 @@ body,
 
 .today-date,
 .logo {
-  padding: 10px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1vw;
+}
+
+.todo-icon {
+  background-image: url(./icons/todoIcon.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 7vh;
+  width: 7vw;
 }
 
 .dashboard {
   background-color: rgb(255, 253, 109);
+  font-size: large;
 }
 
 .boxes {
-  font-size: large;
   padding: 16px;
 }
 
@@ -80,19 +114,51 @@ body,
 
 .add-btn {
   color: black;
-  font-size: 5vh;
+  font-size: min(30px, 5vh);
   font-weight: 900;
   background-color: rgb(255, 253, 109);
   border-color: gold;
   border-style: none;
   border-top-style: solid;
-  border-top-width: 5px;
+  border-top-width: 1vh;
+}
+
+.project-box-title {
+  padding: 16px;
+}
+.project-box {
+  border-top-style: solid;
+  border-top-color: gold;
+  border-top-width: 1vh;
 }
 
 .projects {
-  border-top-style: solid;
-  border-top-color: gold;
-  border-top-width: 5px;
+  padding: 0px 40px;
+}
+
+.boxes > div,
+.project {
+  height: fit-content;
+  width: fit-content;
+}
+
+.boxes,
+.project-box {
+  overflow: auto;
+}
+
+.boxes::-webkit-scrollbar,
+.project-box::-webkit-scrollbar {
+  display: none;
 }
 
 /* modifications */
+
+.boxes > div:hover,
+.project:hover {
+  font-size: larger;
+}
+
+.add-btn:hover {
+  font-size: min(50px, 6vh);
+}
