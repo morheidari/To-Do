@@ -6,6 +6,8 @@ import weekSVG from "./icons/week.svg";
 import importantSVG from "./icons/important.svg";
 import projectsSVG from "./icons/folder.svg";
 import projectSVG from "./icons/project.svg";
+import removeSVG from "./icons/remove.svg";
+import infoSVG from "./icons/info.svg";
 
 // layout
 // header
@@ -80,15 +82,28 @@ projects.append(defaultProject);
 // defining a function for displaying todos
 function displayTodoBox(todo) {
   const todoBox = addElement("div", "todo-box");
-  const deleteTodo = addElement("div", "delete-todo");
-  const doneMark = addElement("input", "done-mark");
-  doneMark.type = "checkbox";
-  doneMark.checked = todo.completed;
+  const deleteTodo = addElement(
+    "div",
+    "delete-todo",
+    `<img src=${removeSVG}></img>`
+  );
+  let doneMark;
+  if (todo.completed) {
+    doneMark = addElement("div", "checkbox-done");
+  } else {
+    doneMark = addElement("div", "checkbox-notdone");
+  }
   const title = addElement("div", "todo-title");
   title.textContent = todo.title;
-  const detail = addElement("div", "todo-details");
   const date = addElement("div", "todo-date");
-  date.textContent = format(todo.date, "eee dd,MMM");
-  todoBox.append(deleteTodo, doneMark, title, detail, date);
+  date.textContent = format(todo.dueDate, "eee dd,MMM");
+  const detail = addElement(
+    "div",
+    "todo-details",
+    `<img src=${infoSVG}></img>`
+  );
+  todoBox.append(deleteTodo, doneMark, title, date, detail);
   return todoBox;
 }
+
+export { displayTodoBox, projectTitle, todoBoxes };

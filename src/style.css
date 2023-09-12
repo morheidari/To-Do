@@ -74,6 +74,17 @@ img {
 .display {
 }
 
+.todo-boxes {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 /* blocks */
 .header {
   font-family: "changa";
@@ -109,9 +120,42 @@ img {
 }
 
 .display {
-  background-color: rgb(228, 228, 196);
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  padding: 15px;
 }
 
+.project-title {
+  font-size: xx-large;
+  padding: 8px;
+  border-bottom: solid 3px gold;
+}
+
+.todo-boxes {
+  padding: 8px;
+}
+
+.todo-box {
+  padding: 4px;
+  border-bottom: solid 3px gold;
+  font-size: 20px;
+}
+
+.todo-title {
+  margin-right: auto;
+}
+
+.checkbox-done {
+  width: 24px;
+  height: 24px;
+  background: url(./icons/done\ mark.png);
+  background-repeat: no-repeat;
+  background-color: gold;
+}
+
+input[type="checkbox"] {
+  outline: 3px solid black;
+}
 .add-btn {
   color: black;
   font-size: min(30px, 5vh);

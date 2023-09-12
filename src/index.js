@@ -1,3 +1,5 @@
+import { displayTodoBox, projectTitle, todoBoxes } from "./dom";
+
 function ToDo(title, description, priority, dueDate, completed) {
   return {
     title,
@@ -25,5 +27,10 @@ function Project(name) {
 
 const inbox = new Project("project one");
 inbox.addToDoToList(
-  ToDo("todo_one", "just an example", "low", new Date(), false)
+  ToDo("todo_one", "just an example", "low", new Date(), true)
+);
+
+projectTitle.textContent = inbox.name;
+inbox.listOfToDos.forEach((todo) =>
+  todoBoxes.appendChild(displayTodoBox(todo))
 );
