@@ -8,6 +8,7 @@ import projectsSVG from "./icons/folder.svg";
 import projectSVG from "./icons/project.svg";
 import removeSVG from "./icons/remove.svg";
 import infoSVG from "./icons/info.svg";
+import { Project } from "./index.js";
 
 // layout
 // header
@@ -72,38 +73,137 @@ const projectBoxTitle = addElement(
 );
 const projects = addElement("div", "projects");
 projectBox.append(projectBoxTitle, projects);
-const defaultProject = addElement(
-  "div",
-  "project",
-  `<img src=${projectSVG}></img> default project`
-);
-projects.append(defaultProject);
+
+const pop = addElement("div", "pop");
+const info = addElement("div", "info");
+const todoForm = addElement("div", "todo-form");
+const addForm = addElement("div", "add-form");
+const projectForm = addElement("div", "project-form");
+pop.append(info, todoForm, addForm, projectForm);
+body.appendChild(pop);
 
 // defining a function for displaying todos
 function displayTodoBox(todo) {
-  const todoBox = addElement("div", "todo-box");
+  const todoBox = addElement("div", "todo-box-total");
+  const upperBox = addElement("div", "todo-box");
+  const lowerBox = addElement("div", "priority-box");
+  lowerBox.textContent = ` ${todo.priority} priority`;
+  // eslint-disable-next-line default-case
+  switch (todo.priority) {
+    case "low":
+      lowerBox.style.color = "blue";
+      break;
+    case "medium":
+      lowerBox.style.color = "green";
+      break;
+    case "high":
+      lowerBox.style.color = "red";
+      break;
+  }
   const deleteTodo = addElement(
     "div",
     "delete-todo",
     `<img src=${removeSVG}></img>`
   );
-  let doneMark;
-  if (todo.completed) {
-    doneMark = addElement("div", "checkbox-done");
-  } else {
-    doneMark = addElement("div", "checkbox-notdone");
-  }
+  deleteTodo.addEventListener("click", () => {
+    todo.project.removeToDo(todo);
+    todoBoxes.removeChild(todoBox);
+  });
+  const doneMark = addElement("div", "checkbox");
+  if (todo.completed) doneMark.classList.add("done");
+  doneMark.addEventListener("click", (evn) => {
+    evn.target.classList.toggle("done");
+    todo.completion();
+  });
   const title = addElement("div", "todo-title");
   title.textContent = todo.title;
   const date = addElement("div", "todo-date");
-  date.textContent = format(todo.dueDate, "eee dd,MMM");
+  date.innerHTML = `${format(todo.dueDate, "eee dd,MMM")}`;
   const detail = addElement(
     "div",
     "todo-details",
     `<img src=${infoSVG}></img>`
   );
-  todoBox.append(deleteTodo, doneMark, title, date, detail);
+  detail.addEventListener("click", () => {
+    info.textContent = todo.description;
+    pop.style.display = "block";
+    info.style.display = "flex";
+  });
+  todoBox.append(upperBox, lowerBox);
+  upperBox.append(deleteTodo, doneMark, title, date, detail);
   return todoBox;
 }
 
-export { displayTodoBox, projectTitle, todoBoxes };
+pop.addEventListener("click", (e) => {
+  if (e.target.className === "pop") {
+    pop.style.display = "none";
+    info.style.display = "none";
+    addForm.style.display = "none";
+    todoForm.style.display = "none";
+    projectForm.style.display = "none";
+  }
+});
+
+function addProjectToList(project) {
+  const defaultProject = addElement(
+    "div",
+    "project",
+    `<img src=${projectSVG}></img> ${project.name}`
+  );
+  projects.append(defaultProject);
+}
+
+function displayProject(project) {
+  projectTitle.textContent = project.name;
+  project.listOfToDos.forEach((todo) =>
+    todoBoxes.appendChild(displayTodoBox(todo))
+  );
+}
+// Add button functionality
+const addNewProject = addElement("div", "add-project", "Add new project");
+const addTodoToProject = addElement(
+  "div",
+  "add-todo",
+  "Add new todo to existing project"
+);
+addForm.append(addNewProject, addTodoToProject);
+
+addBtn.addEventListener("click", () => {
+  addForm.style.display = "flex";
+  pop.style.display = "block";
+});
+
+const projectFormLable = addElement(
+  "div",
+  "project-form-label",
+  "Project title:"
+);
+const newProjectTitle = addElement("input", "new-project-title");
+const projectFormButtons = addElement(
+  "button",
+  "project-form-buttons",
+  "Enter"
+);
+projectForm.append(projectFormLable, newProjectTitle, projectFormButtons);
+
+addNewProject.addEventListener("click", () => {
+  projectForm.style.display = "flex";
+  addForm.style.display = "none";
+});
+
+const listOfProjects = [];
+
+projectFormButtons.addEventListener("click", () => {
+  listOfProjects.push(new Project(newProjectTitle.value));
+  const projectElement = addElement(
+    "div",
+    "project-element",
+    `<img src=${projectSVG}></img> ${newProjectTitle.value}`
+  );
+  projects.appendChild(projectElement);
+  newProjectTitle.value = "";
+  projectForm.style.display = "none";
+  pop.style.display = "none";
+});
+
+export { displayProject, addProjectToList };

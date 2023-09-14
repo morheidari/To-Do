@@ -1,16 +1,14 @@
-import { displayTodoBox, projectTitle, todoBoxes } from "./dom";
+import { displayProject } from "./dom";
 
 function ToDo(title, description, priority, dueDate, completed) {
-  return {
-    title,
-    description,
-    priority,
-    dueDate,
-    completed,
-    completion: () => {
-      if (this.completed === true) this.completed = false;
-      else this.completed = true;
-    },
+  this.title = title;
+  this.description = description;
+  this.priority = priority;
+  this.dueDate = dueDate;
+  this.completed = completed;
+  this.completion = function () {
+    if (this.completed === true) this.completed = false;
+    else this.completed = true;
   };
 }
 
@@ -22,15 +20,18 @@ function Project(name) {
   };
   this.addToDoToList = (toDoItem) => {
     this.listOfToDos.push(toDoItem);
+    toDoItem.project = this;
   };
 }
 
 const inbox = new Project("project one");
 inbox.addToDoToList(
-  ToDo("todo_one", "just an example", "low", new Date(), true)
+  new ToDo("todo_one", "just an example!", "low", new Date(), true)
+);
+inbox.addToDoToList(
+  new ToDo("todo_two", "another example!", "high", new Date(), false)
 );
 
-projectTitle.textContent = inbox.name;
-inbox.listOfToDos.forEach((todo) =>
-  todoBoxes.appendChild(displayTodoBox(todo))
-);
+displayProject(inbox);
+
+export { Project };
