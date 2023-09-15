@@ -34,4 +34,4 @@ inbox.addToDoToList(
 
 displayProject(inbox);
 
-export { Project };
+export { Project, ToDo };

@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { add, format } from "date-fns";
 import "./style.css";
 import inboxSVG from "./icons/inbox.svg";
 import todaySVG from "./icons/today.svg";
@@ -8,7 +8,7 @@ import projectsSVG from "./icons/folder.svg";
 import projectSVG from "./icons/project.svg";
 import removeSVG from "./icons/remove.svg";
 import infoSVG from "./icons/info.svg";
-import { Project } from "./index.js";
+import { Project, ToDo } from "./index.js";
 
 // layout
 // header
@@ -155,6 +155,7 @@ function addProjectToList(project) {
 
 function displayProject(project) {
   projectTitle.textContent = project.name;
+  todoBoxes.innerHTML = "";
   project.listOfToDos.forEach((todo) =>
     todoBoxes.appendChild(displayTodoBox(todo))
   );
@@ -194,16 +195,90 @@ addNewProject.addEventListener("click", () => {
 const listOfProjects = [];
 
 projectFormButtons.addEventListener("click", () => {
-  listOfProjects.push(new Project(newProjectTitle.value));
+  const p = new Project(newProjectTitle.value);
+  listOfProjects.push(p);
   const projectElement = addElement(
     "div",
     "project-element",
     `<img src=${projectSVG}></img> ${newProjectTitle.value}`
   );
   projects.appendChild(projectElement);
+  projectElement.addEventListener("click", () => {
+    displayProject(p);
+  });
   newProjectTitle.value = "";
   projectForm.style.display = "none";
   pop.style.display = "none";
+});
+// todo form elements
+function createTodoForm() {
+  todoForm.innerHTML = "";
+  const enterName = addElement("div", "todo-name-div");
+  const nameLabel = addElement("label", "todo-label", "Todo: ");
+  const nameInput = addElement("input", "todo-name-input");
+  enterName.append(nameLabel, nameInput);
+  const enterpriority = addElement("div", "priority-div");
+  const priorityLabel = addElement("label", "priority-label", "Priority: ");
+  const prioritySelect = addElement(
+    "select",
+    "priority-select",
+    "<option value='high'>high</option><option value='meduim'>medium</option><option value='low'>low</option>"
+  );
+  enterpriority.append(priorityLabel, prioritySelect);
+  const entertodoDate = addElement("div", "todo-date-div");
+  const dateLabel = addElement("label", "date-label", "Duo date: ");
+  const dateInput = addElement("input", "date-input");
+  dateInput.type = "date";
+  entertodoDate.append(dateLabel, dateInput);
+  const selectProject = addElement("div", "select-project");
+  const projectLabel = addElement("label", "project-label", "Project: ");
+  const projectSelect = addElement("select", "project-select");
+  listOfProjects.forEach((pro, i) => {
+    const option = document.createElement("option");
+    option.value = i;
+    option.text = pro.name;
+    projectSelect.appendChild(option);
+  });
+  selectProject.append(projectLabel, projectSelect);
+  const writeDescription = addElement("div", "write-desc");
+  const descLable = addElement("label", "description-label", "Description: ");
+  const descText = addElement("textarea", "description-text");
+  writeDescription.append(descLable, descText);
+  const formBtns = addElement("div", "form-btns");
+  const confirmBtn = addElement("div", "confirm-btn", "Confirm");
+  const cancelBtn = addElement("div", "cancel-btn", "Cancel");
+  formBtns.append(confirmBtn, cancelBtn);
+  todoForm.append(
+    selectProject,
+    enterName,
+    enterpriority,
+    entertodoDate,
+    writeDescription,
+    formBtns
+  );
+  confirmBtn.addEventListener("click", () => {
+    listOfProjects[projectSelect.value].addToDoToList(
+      new ToDo(
+        nameInput.value,
+        descText.value,
+        prioritySelect.value,
+        new Date(dateInput.value),
+        false
+      )
+    );
+    displayProject(listOfProjects[projectSelect.value]);
+    nameInput.value = "";
+    descText.value = "";
+    pop.style.display = "none";
+    todoForm.style.display = "none";
+  });
+}
+
+addTodoToProject.addEventListener("click", () => {
+  createTodoForm();
+  addForm.style.display = "none";
+  todoForm.style.display = "flex";
+  pop.style.display = "block";
 });
 
 export { displayProject, addProjectToList };
