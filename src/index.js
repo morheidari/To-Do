@@ -1,5 +1,3 @@
-import { displayProject } from "./dom";
-
 function ToDo(title, description, priority, dueDate, completed) {
   this.title = title;
   this.description = description;
@@ -10,6 +8,7 @@ function ToDo(title, description, priority, dueDate, completed) {
     if (this.completed === true) this.completed = false;
     else this.completed = true;
   };
+  this.project = undefined;
 }
 
 function Project(name) {
@@ -20,18 +19,7 @@ function Project(name) {
   };
   this.addToDoToList = (toDoItem) => {
     this.listOfToDos.push(toDoItem);
-    toDoItem.project = this;
   };
 }
-
-const inbox = new Project("project one");
-inbox.addToDoToList(
-  new ToDo("todo_one", "just an example!", "low", new Date(), true)
-);
-inbox.addToDoToList(
-  new ToDo("todo_two", "another example!", "high", new Date(), false)
-);
-
-displayProject(inbox);
 
 export { Project, ToDo };

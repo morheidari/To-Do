@@ -321,18 +321,57 @@ img {
   transform: translate(-50%, -50%);
   background-color: gold;
   border-radius: 5px;
-  width: max(20vw, auto);
+  width: max-content;
   height: max(5vh, auto);
 }
 
 .todo-form > div {
   display: flex;
+  flex-direction: column;
   gap: 10px;
+  width: 250px;
+  justify-content: start;
+}
+.todo-form > div:last-child {
+  flex-direction: row;
+  justify-content: center;
+}
+.todo-form > div:last-child > div {
+  border: 3px solid black;
+  padding: 8px;
+  width: 100px;
+}
+.todo-form > div:last-child > div:hover {
+  transform: scale(1.05);
+  transition: all 0.1s;
+}
+
+.todo-form > div > textarea {
+  align-self: center;
+  resize: none;
+  height: 80px;
+  width: 100%;
+}
+
+.project-element {
+  display: flex;
+  justify-content: space-between;
+}
+
+.project-name-element {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.project-element > div:hover {
+  transform: scale(1.05);
+  transition: all 0.1s;
 }
 /* modifications */
 
-.boxes > div:hover,
-.projects > div:hover {
+.boxes > div:hover {
   transform: scale(1.05);
   transition: all 0.1s;
 }

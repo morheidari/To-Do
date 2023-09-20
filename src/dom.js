@@ -1,4 +1,4 @@
-import { add, format } from "date-fns";
+import { format, isToday, isSameWeek } from "date-fns";
 import "./style.css";
 import inboxSVG from "./icons/inbox.svg";
 import todaySVG from "./icons/today.svg";
@@ -7,8 +7,11 @@ import importantSVG from "./icons/important.svg";
 import projectsSVG from "./icons/folder.svg";
 import projectSVG from "./icons/project.svg";
 import removeSVG from "./icons/remove.svg";
+import deleteSVG from "./icons/delete.svg";
 import infoSVG from "./icons/info.svg";
 import { Project, ToDo } from "./index.js";
+
+const inbox = new Project("Inbox");
 
 // layout
 // header
@@ -144,15 +147,6 @@ pop.addEventListener("click", (e) => {
   }
 });
 
-function addProjectToList(project) {
-  const defaultProject = addElement(
-    "div",
-    "project",
-    `<img src=${projectSVG}></img> ${project.name}`
-  );
-  projects.append(defaultProject);
-}
-
 function displayProject(project) {
   projectTitle.textContent = project.name;
   todoBoxes.innerHTML = "";
@@ -160,6 +154,8 @@ function displayProject(project) {
     todoBoxes.appendChild(displayTodoBox(todo))
   );
 }
+
+displayProject(inbox);
 // Add button functionality
 const addNewProject = addElement("div", "add-project", "Add new project");
 const addTodoToProject = addElement(
@@ -193,22 +189,35 @@ addNewProject.addEventListener("click", () => {
 });
 
 const listOfProjects = [];
+listOfProjects.push(inbox);
 
 projectFormButtons.addEventListener("click", () => {
   const p = new Project(newProjectTitle.value);
   listOfProjects.push(p);
-  const projectElement = addElement(
+  const projectElement = addElement("div", "project-element");
+  const projectNameElement = addElement(
     "div",
-    "project-element",
+    "project-name-element",
     `<img src=${projectSVG}></img> ${newProjectTitle.value}`
   );
+  const deleteProjectElement = addElement(
+    "div",
+    "delete-project",
+    `<div class'delete-project'><img src=${deleteSVG}></img></div> `
+  );
+  projectElement.append(projectNameElement, deleteProjectElement);
   projects.appendChild(projectElement);
-  projectElement.addEventListener("click", () => {
+  projectNameElement.addEventListener("click", () => {
     displayProject(p);
   });
   newProjectTitle.value = "";
   projectForm.style.display = "none";
   pop.style.display = "none";
+  deleteProjectElement.addEventListener("click", () => {
+    projects.removeChild(projectElement);
+    listOfProjects.splice(listOfProjects.indexOf(p), 1);
+    displayProject(inbox);
+  });
 });
 // todo form elements
 function createTodoForm() {
@@ -257,16 +266,23 @@ function createTodoForm() {
     formBtns
   );
   confirmBtn.addEventListener("click", () => {
-    listOfProjects[projectSelect.value].addToDoToList(
-      new ToDo(
-        nameInput.value,
-        descText.value,
-        prioritySelect.value,
-        new Date(dateInput.value),
-        false
-      )
+    const newTodo = new ToDo(
+      nameInput.value,
+      descText.value,
+      prioritySelect.value,
+      new Date(dateInput.value),
+      false
     );
+    newTodo.project = listOfProjects[projectSelect.value];
+    listOfProjects[projectSelect.value].addToDoToList(newTodo);
     displayProject(listOfProjects[projectSelect.value]);
+    nameInput.value = "";
+    descText.value = "";
+    pop.style.display = "none";
+    todoForm.style.display = "none";
+  });
+
+  cancelBtn.addEventListener("click", () => {
     nameInput.value = "";
     descText.value = "";
     pop.style.display = "none";
@@ -281,4 +297,34 @@ addTodoToProject.addEventListener("click", () => {
   pop.style.display = "block";
 });
 
-export { displayProject, addProjectToList };
+const today = new Project("Today");
+
+const week = new Project("This week");
+
+bInbox.addEventListener("click", () => {
+  displayProject(inbox);
+});
+
+bToday.addEventListener("click", () => {
+  today.listOfToDos = [];
+  listOfProjects.forEach((prj) => {
+    prj.listOfToDos.forEach((t) => {
+      if (isToday(t.dueDate)) {
+        today.addToDoToList(t);
+      }
+    });
+  });
+  displayProject(today);
+});
+
+bThisweek.addEventListener("click", () => {
+  week.listOfToDos = [];
+  listOfProjects.forEach((prj) => {
+    prj.listOfToDos.forEach((t) => {
+      if (isSameWeek(t.dueDate, new Date(), { weekStartsOn: 6 })) {
+        week.addToDoToList(t);
+      }
+    });
+  });
+  displayProject(week);
+});
