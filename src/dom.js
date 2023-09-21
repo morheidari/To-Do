@@ -8,10 +8,12 @@ import projectsSVG from "./icons/folder.svg";
 import projectSVG from "./icons/project.svg";
 import removeSVG from "./icons/remove.svg";
 import deleteSVG from "./icons/delete.svg";
-import infoSVG from "./icons/info.svg";
+import expMoreSVG from "./icons/exp more.svg";
+import expLessSVG from "./icons/exp less.svg";
 import { Project, ToDo } from "./index.js";
 
 const inbox = new Project("Inbox");
+inbox.addToDoToList(new ToDo("one", "example", "low", new Date(), true));
 
 // layout
 // header
@@ -78,31 +80,40 @@ const projects = addElement("div", "projects");
 projectBox.append(projectBoxTitle, projects);
 
 const pop = addElement("div", "pop");
-const info = addElement("div", "info");
 const todoForm = addElement("div", "todo-form");
 const addForm = addElement("div", "add-form");
 const projectForm = addElement("div", "project-form");
-pop.append(info, todoForm, addForm, projectForm);
+pop.append(todoForm, addForm, projectForm);
 body.appendChild(pop);
 
 // defining a function for displaying todos
 function displayTodoBox(todo) {
   const todoBox = addElement("div", "todo-box-total");
   const upperBox = addElement("div", "todo-box");
-  const lowerBox = addElement("div", "priority-box");
-  lowerBox.textContent = ` ${todo.priority} priority`;
+  const lowerBox = addElement("div", "todo-lower-box");
+  const descriptionBox = addElement("div", "description-box");
+  const priorityBox = addElement("div", "priority-box");
+  priorityBox.textContent = ` ${todo.priority} priority`;
   // eslint-disable-next-line default-case
   switch (todo.priority) {
     case "low":
-      lowerBox.style.color = "blue";
+      priorityBox.style.color = "blue";
       break;
     case "medium":
-      lowerBox.style.color = "green";
+      priorityBox.style.color = "green";
       break;
     case "high":
-      lowerBox.style.color = "red";
+      priorityBox.style.color = "red";
       break;
   }
+  lowerBox.append(priorityBox, descriptionBox);
+  const descriptionBoxText = addElement(
+    "textarea",
+    "desc-textarea",
+    todo.description
+  );
+  descriptionBox.innerHTML = `Description:`;
+  descriptionBox.append(descriptionBoxText);
   const deleteTodo = addElement(
     "div",
     "delete-todo",
@@ -125,12 +136,17 @@ function displayTodoBox(todo) {
   const detail = addElement(
     "div",
     "todo-details",
-    `<img src=${infoSVG}></img>`
+    `<img src=${expMoreSVG}></img>`
   );
   detail.addEventListener("click", () => {
-    info.textContent = todo.description;
-    pop.style.display = "block";
-    info.style.display = "flex";
+    if (lowerBox.style.display === "flex") {
+      todo.description = descriptionBoxText.value;
+      lowerBox.style.display = "none";
+      detail.innerHTML = `<img src=${expMoreSVG}></img>`;
+    } else {
+      detail.innerHTML = `<img src=${expLessSVG}></img>`;
+      lowerBox.style.display = "flex";
+    }
   });
   todoBox.append(upperBox, lowerBox);
   upperBox.append(deleteTodo, doneMark, title, date, detail);
@@ -140,7 +156,6 @@ function displayTodoBox(todo) {
 pop.addEventListener("click", (e) => {
   if (e.target.className === "pop") {
     pop.style.display = "none";
-    info.style.display = "none";
     addForm.style.display = "none";
     todoForm.style.display = "none";
     projectForm.style.display = "none";

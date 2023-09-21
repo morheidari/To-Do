@@ -163,10 +163,16 @@ img {
   padding: 8px;
   width: fit-content;
 }
+.todo-lower-box {
+  display: none;
+  flex-direction: column;
+}
 
-.priority-box > img {
-  height: 20px;
-  width: 20px;
+.description-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
 }
 .todo-box > div:nth-child(-n + 2):hover {
   transform: scale(1.1);
@@ -196,22 +202,6 @@ img {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.134);
-}
-
-.info {
-  display: none;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  position: absolute;
-  padding: 20px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  border-radius: 5px;
-  width: max(20vw, auto);
-  height: max(5vh, auto);
 }
 
 .add-form {
@@ -368,6 +358,16 @@ img {
 .project-element > div:hover {
   transform: scale(1.05);
   transition: all 0.1s;
+}
+
+textarea {
+  resize: none;
+  padding: 5px;
+}
+
+.description-box > textarea {
+  width: 800px;
+  height: 50px;
 }
 /* modifications */
 
