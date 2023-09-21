@@ -10,10 +10,11 @@ import removeSVG from "./icons/remove.svg";
 import deleteSVG from "./icons/delete.svg";
 import expMoreSVG from "./icons/exp more.svg";
 import expLessSVG from "./icons/exp less.svg";
+import starSVG from "./icons/star.svg";
 import { Project, ToDo } from "./index.js";
 
 const inbox = new Project("Inbox");
-inbox.addToDoToList(new ToDo("one", "example", "low", new Date(), true));
+inbox.addToDoToList(new ToDo("one", "example", "low", new Date(), true, false));
 
 // layout
 // header
@@ -140,16 +141,31 @@ function displayTodoBox(todo) {
   );
   detail.addEventListener("click", () => {
     if (lowerBox.style.display === "flex") {
+      detail.style.transform = "rotate(0deg)";
       todo.description = descriptionBoxText.value;
       lowerBox.style.display = "none";
-      detail.innerHTML = `<img src=${expMoreSVG}></img>`;
     } else {
-      detail.innerHTML = `<img src=${expLessSVG}></img>`;
+      detail.style.transform = "rotate(180deg)";
       lowerBox.style.display = "flex";
     }
   });
+  const importantMark = addElement(
+    "div",
+    "important-mark",
+    `<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+    <svg width="800px" height="800px" viewBox="0 0 24 24" id="star_filled" data-name="star filled" xmlns="http://www.w3.org/2000/svg">
+      <rect id="Rectangle_4" data-name="Rectangle 4" width="24" height="24" fill="none"/>
+      <path id="Star" d="M10,15,4.122,18.09l1.123-6.545L.489,6.91l6.572-.955L10,0l2.939,5.955,6.572.955-4.755,4.635,1.123,6.545Z" transform="translate(2 3)" stroke="#000000" stroke-miterlimit="10" stroke-width="1.5"/>
+    </svg>`
+  );
+  if (todo.important) importantMark.classList.add("is-important");
+  importantMark.addEventListener("click", () => {
+    importantMark.classList.toggle("is-important");
+    if (todo.important) todo.important = false;
+    else todo.important = true;
+  });
   todoBox.append(upperBox, lowerBox);
-  upperBox.append(deleteTodo, doneMark, title, date, detail);
+  upperBox.append(deleteTodo, doneMark, title, date, importantMark, detail);
   return todoBox;
 }
 
@@ -286,6 +302,7 @@ function createTodoForm() {
       descText.value,
       prioritySelect.value,
       new Date(dateInput.value),
+      false,
       false
     );
     newTodo.project = listOfProjects[projectSelect.value];
@@ -316,6 +333,8 @@ const today = new Project("Today");
 
 const week = new Project("This week");
 
+const importantProjects = new Project("Important");
+
 bInbox.addEventListener("click", () => {
   displayProject(inbox);
 });
@@ -342,4 +361,16 @@ bThisweek.addEventListener("click", () => {
     });
   });
   displayProject(week);
+});
+
+bImportant.addEventListener("click", () => {
+  importantProjects.listOfToDos = [];
+  listOfProjects.forEach((prj) => {
+    prj.listOfToDos.forEach((t) => {
+      if (t.important) {
+        importantProjects.addToDoToList(t);
+      }
+    });
+  });
+  displayProject(importantProjects);
 });

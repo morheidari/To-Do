@@ -1,4 +1,4 @@
-function ToDo(title, description, priority, dueDate, completed) {
+function ToDo(title, description, priority, dueDate, completed, important) {
   this.title = title;
   this.description = description;
   this.priority = priority;
@@ -9,6 +9,7 @@ function ToDo(title, description, priority, dueDate, completed) {
     else this.completed = true;
   };
   this.project = undefined;
+  this.important = important;
 }
 
 function Project(name) {

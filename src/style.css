@@ -174,10 +174,6 @@ img {
   gap: 10px;
   padding: 8px;
 }
-.todo-box > div:nth-child(-n + 2):hover {
-  transform: scale(1.1);
-  transition: all 0.1s;
-}
 
 .todo-title {
   margin-right: auto;
@@ -365,6 +361,30 @@ textarea {
   padding: 5px;
 }
 
+.important-mark,
+.todo-details,
+.delete-todo {
+  width: 35px;
+  height: 35px;
+  transition: all 0.3s;
+}
+
+.is-important > svg {
+  fill: gold !important;
+}
+.is-important > svg > path {
+  stroke: gold !important;
+}
+.important-mark > svg {
+  width: 35px;
+  height: 35px;
+  fill: white;
+}
+
+.important-mark > svg > path {
+  stroke: black;
+}
+
 .description-box > textarea {
   width: 800px;
   height: 50px;
@@ -378,5 +398,13 @@ textarea {
 
 .add-btn:hover {
   font-size: min(50px, 6vh);
+  transition: all 0.1s;
+}
+
+.checkbox:hover,
+.important-mark:hover,
+.todo-details:hover,
+.delete-todo:hover {
+  transform: scale(1.1);
   transition: all 0.1s;
 }
