@@ -12,7 +12,6 @@ import expMoreSVG from "./icons/exp more.svg";
 import { Project, ToDo } from "./index.js";
 
 const inbox = new Project("Inbox");
-inbox.addToDoToList(new ToDo("one", "example", "low", new Date(), true, false));
 
 // layout
 // header
