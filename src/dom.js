@@ -9,8 +9,6 @@ import projectSVG from "./icons/project.svg";
 import removeSVG from "./icons/remove.svg";
 import deleteSVG from "./icons/delete.svg";
 import expMoreSVG from "./icons/exp more.svg";
-import expLessSVG from "./icons/exp less.svg";
-import starSVG from "./icons/star.svg";
 import { Project, ToDo } from "./index.js";
 
 const inbox = new Project("Inbox");
@@ -212,7 +210,17 @@ const projectFormButtons = addElement(
   "project-form-buttons",
   "Enter"
 );
-projectForm.append(projectFormLable, newProjectTitle, projectFormButtons);
+const projectFormError = addElement(
+  "div",
+  "project-form-error",
+  "Please Enter Project Title!"
+);
+projectForm.append(
+  projectFormError,
+  projectFormLable,
+  newProjectTitle,
+  projectFormButtons
+);
 
 addNewProject.addEventListener("click", () => {
   projectForm.style.display = "flex";
@@ -223,32 +231,37 @@ const listOfProjects = [];
 listOfProjects.push(inbox);
 
 projectFormButtons.addEventListener("click", () => {
-  const p = new Project(newProjectTitle.value);
-  listOfProjects.push(p);
-  const projectElement = addElement("div", "project-element");
-  const projectNameElement = addElement(
-    "div",
-    "project-name-element",
-    `<img src=${projectSVG}></img> ${newProjectTitle.value}`
-  );
-  const deleteProjectElement = addElement(
-    "div",
-    "delete-project",
-    `<div class'delete-project'><img src=${deleteSVG}></img></div> `
-  );
-  projectElement.append(projectNameElement, deleteProjectElement);
-  projects.appendChild(projectElement);
-  projectNameElement.addEventListener("click", () => {
-    displayProject(p);
-  });
-  newProjectTitle.value = "";
-  projectForm.style.display = "none";
-  pop.style.display = "none";
-  deleteProjectElement.addEventListener("click", () => {
-    projects.removeChild(projectElement);
-    listOfProjects.splice(listOfProjects.indexOf(p), 1);
-    displayProject(inbox);
-  });
+  if (newProjectTitle.value !== "") {
+    projectFormError.style.display = "none";
+    const p = new Project(newProjectTitle.value);
+    listOfProjects.push(p);
+    const projectElement = addElement("div", "project-element");
+    const projectNameElement = addElement(
+      "div",
+      "project-name-element",
+      `<img src=${projectSVG}></img> ${newProjectTitle.value}`
+    );
+    const deleteProjectElement = addElement(
+      "div",
+      "delete-project",
+      `<div class'delete-project'><img src=${deleteSVG}></img></div> `
+    );
+    projectElement.append(projectNameElement, deleteProjectElement);
+    projects.appendChild(projectElement);
+    projectNameElement.addEventListener("click", () => {
+      displayProject(p);
+    });
+    newProjectTitle.value = "";
+    projectForm.style.display = "none";
+    pop.style.display = "none";
+    deleteProjectElement.addEventListener("click", () => {
+      projects.removeChild(projectElement);
+      listOfProjects.splice(listOfProjects.indexOf(p), 1);
+      displayProject(inbox);
+    });
+  } else {
+    projectFormError.style.display = "flex";
+  }
 });
 // todo form elements
 function createTodoForm() {
@@ -266,10 +279,11 @@ function createTodoForm() {
   );
   enterpriority.append(priorityLabel, prioritySelect);
   const entertodoDate = addElement("div", "todo-date-div");
-  const dateLabel = addElement("label", "date-label", "Duo date: ");
+  const dateLabel = addElement("label", "date-label", "Date: ");
+  const dateError = addElement("div", "date-error", "Please Enter date!");
   const dateInput = addElement("input", "date-input");
   dateInput.type = "date";
-  entertodoDate.append(dateLabel, dateInput);
+  entertodoDate.append(dateError, dateLabel, dateInput);
   const selectProject = addElement("div", "select-project");
   const projectLabel = addElement("label", "project-label", "Project: ");
   const projectSelect = addElement("select", "project-select");
@@ -297,21 +311,26 @@ function createTodoForm() {
     formBtns
   );
   confirmBtn.addEventListener("click", () => {
-    const newTodo = new ToDo(
-      nameInput.value,
-      descText.value,
-      prioritySelect.value,
-      new Date(dateInput.value),
-      false,
-      false
-    );
-    newTodo.project = listOfProjects[projectSelect.value];
-    listOfProjects[projectSelect.value].addToDoToList(newTodo);
-    displayProject(listOfProjects[projectSelect.value]);
-    nameInput.value = "";
-    descText.value = "";
-    pop.style.display = "none";
-    todoForm.style.display = "none";
+    if (dateInput.value !== "") {
+      dateError.style.display = "none";
+      const newTodo = new ToDo(
+        nameInput.value,
+        descText.value,
+        prioritySelect.value,
+        new Date(dateInput.value),
+        false,
+        false
+      );
+      newTodo.project = listOfProjects[projectSelect.value];
+      listOfProjects[projectSelect.value].addToDoToList(newTodo);
+      displayProject(listOfProjects[projectSelect.value]);
+      nameInput.value = "";
+      descText.value = "";
+      pop.style.display = "none";
+      todoForm.style.display = "none";
+    } else {
+      dateError.style.display = "flex";
+    }
   });
 
   cancelBtn.addEventListener("click", () => {
