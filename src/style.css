@@ -430,6 +430,11 @@ textarea {
   justify-content: center;
   color: red;
 }
+
+.display {
+  overflow-y: scroll;
+}
+
 /* modifications */
 
 .boxes > div:hover {

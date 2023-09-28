@@ -9,9 +9,7 @@ import projectSVG from "./icons/project.svg";
 import removeSVG from "./icons/remove.svg";
 import deleteSVG from "./icons/delete.svg";
 import expMoreSVG from "./icons/exp more.svg";
-import { Project, ToDo } from "./index.js";
-
-const inbox = new Project("Inbox");
+import { listOfProjects, Project, ToDo } from "./index.js";
 
 // layout
 // header
@@ -183,7 +181,6 @@ function displayProject(project) {
   );
 }
 
-displayProject(inbox);
 // Add button functionality
 const addNewProject = addElement("div", "add-project", "Add new project");
 const addTodoToProject = addElement(
@@ -226,38 +223,39 @@ addNewProject.addEventListener("click", () => {
   addForm.style.display = "none";
 });
 
-const listOfProjects = [];
-listOfProjects.push(inbox);
+function displayProjectName(p) {
+  const projectElement = addElement("div", "project-element");
+  const projectNameElement = addElement(
+    "div",
+    "project-name-element",
+    `<img src=${projectSVG}></img> ${p.name}`
+  );
+  const deleteProjectElement = addElement(
+    "div",
+    "delete-project",
+    `<div class'delete-project'><img src=${deleteSVG}></img></div> `
+  );
+  projectElement.append(projectNameElement, deleteProjectElement);
+  projects.appendChild(projectElement);
+  projectNameElement.addEventListener("click", () => {
+    displayProject(p);
+  });
+  deleteProjectElement.addEventListener("click", () => {
+    projects.removeChild(projectElement);
+    listOfProjects.splice(listOfProjects.indexOf(p), 1);
+    displayProject(listOfProjects[0]);
+  });
+}
 
 projectFormButtons.addEventListener("click", () => {
   if (newProjectTitle.value !== "") {
     projectFormError.style.display = "none";
     const p = new Project(newProjectTitle.value);
     listOfProjects.push(p);
-    const projectElement = addElement("div", "project-element");
-    const projectNameElement = addElement(
-      "div",
-      "project-name-element",
-      `<img src=${projectSVG}></img> ${newProjectTitle.value}`
-    );
-    const deleteProjectElement = addElement(
-      "div",
-      "delete-project",
-      `<div class'delete-project'><img src=${deleteSVG}></img></div> `
-    );
-    projectElement.append(projectNameElement, deleteProjectElement);
-    projects.appendChild(projectElement);
-    projectNameElement.addEventListener("click", () => {
-      displayProject(p);
-    });
+    displayProjectName(p);
     newProjectTitle.value = "";
     projectForm.style.display = "none";
     pop.style.display = "none";
-    deleteProjectElement.addEventListener("click", () => {
-      projects.removeChild(projectElement);
-      listOfProjects.splice(listOfProjects.indexOf(p), 1);
-      displayProject(inbox);
-    });
   } else {
     projectFormError.style.display = "flex";
   }
@@ -354,7 +352,7 @@ const week = new Project("This week");
 const importantProjects = new Project("Important");
 
 bInbox.addEventListener("click", () => {
-  displayProject(inbox);
+  displayProject(listOfProjects[0]);
 });
 
 bToday.addEventListener("click", () => {
@@ -392,3 +390,5 @@ bImportant.addEventListener("click", () => {
   });
   displayProject(importantProjects);
 });
+
+export { displayProjectName, displayProject };
