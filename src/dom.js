@@ -116,7 +116,8 @@ function displayTodoBox(todo) {
     `<img src=${removeSVG}></img>`
   );
   deleteTodo.addEventListener("click", () => {
-    todo.project.removeToDo(todo);
+    const p = listOfProjects.filter((pro) => pro.name === todo.project);
+    p[0].removeToDo(todo);
     todoBoxes.removeChild(todoBox);
   });
   const doneMark = addElement("div", "checkbox");
@@ -318,7 +319,7 @@ function createTodoForm() {
         false,
         false
       );
-      newTodo.project = listOfProjects[projectSelect.value];
+      newTodo.project = listOfProjects[projectSelect.value].name;
       listOfProjects[projectSelect.value].addToDoToList(newTodo);
       displayProject(listOfProjects[projectSelect.value]);
       nameInput.value = "";
